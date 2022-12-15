@@ -1,2 +1,4 @@
 # ignore input/output files
 *.txt
+*.exe
+*.log
