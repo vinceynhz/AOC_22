@@ -81,6 +81,6 @@ fn part_two(lines []string) {
 
 fn main() {
     lines := os.read_lines("input.txt") or { panic(err) }
-    part_one(lines) // 7746
-    part_two(lines) // 2604
+    part_one(lines)
+    part_two(lines)
 }
