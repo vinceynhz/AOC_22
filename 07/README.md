@@ -15,3 +15,17 @@ On the list of files I actually did nothing. Only when the line started with `di
 For the calculation of the sizes I did a recursive stuff once I had all the file structure built. In my python version this was done every time, but in V I did the calculation once and reused the value for both parts of the problem.
 
 For the second part I calculated the space needed from the input data, and then walked the whole file system collecting all sizes that were >= than the space needed. Then just grabbed the minimum of those.
+
+---
+
+As the conversation with my coworkers evolved, some people implemented a flat map using the full path to a directory as the key (or the source for the hash needed to uniquely find a directory). One was using Haskell and described to us his approach and the patterns he'd use to apply the predicate to the data.
+
+Out of that conversation and about functional languages, he mentioned:
+
+> ...[I] just wish there were more resources and examples out there. It works elegantly when it is figured out, but the journey is pretty painful :skull:
+
+For me that's a huge part of the fun, figuring the thing out.
+
+Thinking deeper about it, this is probably because I have done Java and other "popular" languages for a while now. In those, everything the industry needs is already done and regurgitated and there's really nothing new under the sun. The industry relies on those tried and tested frameworks/methods/platforms because it's "easy" to find developers who can do more of the the same. Production line thinking.
+
+But when you're figuring out a new language just for fun, or a challenge like these ones just for the goal of solving the puzzle, and then implementing a solution for it... Ah, does it feel rewarding!!!
