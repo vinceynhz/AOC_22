@@ -65,6 +65,7 @@ mut:
     screen_height int
     screen_width  int
     font_size     int
+    font_cfg      gx.TextCfg
     data          []string
     visible       [][]bool
     cur_count     int
@@ -77,7 +78,7 @@ fn (app &App) draw() {
     for i in 0 .. app.height {
         for j in 0 .. app.width {
             val := app.data[i][j] - 0x30
-            color := if app.visible[i][j] { generate_swatch(val) } else { gx.black }
+            color := if app.visible[i][j] { generate_swatch(val) } else { gx.white }
             app.gg.draw_rect_filled(j * app.scale + padding, i * app.scale + padding, app.scale - 1, app.scale - 1, color)
         }
     }
@@ -188,14 +189,16 @@ fn main() {
         screen_height: screen_height
         screen_width: screen_width
         font_size: m/10
+        font_cfg: gx.TextCfg{ color: gx.black, size: m/30 }
         data: lines
         visible: [][]bool{len: height, init:[]bool{len:width, init:true}}
         cur_row: 1
         cur_col: 1
         cur_count: height * 2 + (width - 2) * 2
+
     }
     app.gg = gg.new_context(
-        bg_color: gx.black
+        bg_color: gx.white
         width: screen_width + 200
         height: screen_height
         create_window: true
@@ -218,9 +221,9 @@ fn frame(mut app &App) {
     app.update()
     size := app.font_size / 3
     app.draw()
-    app.gg.draw_text(app.screen_width + padding, padding, 'Part 1', gx.TextCfg{ color: gx.white, size: size })
-    app.gg.draw_text(app.screen_width + padding, padding + size, '(${app.cur_col}, ${app.cur_row})', gx.TextCfg{ color: gx.white, size: app.font_size / 3 })
-    app.gg.draw_text(app.screen_width + padding, padding + (2 * size), 'State: ${app.state}', gx.TextCfg{ color: gx.white, size: app.font_size / 3 })
-    app.gg.draw_text(app.screen_width + padding, padding + (3 * size), 'Visible: ${app.cur_count}', gx.TextCfg{ color: gx.white, size: app.font_size / 3 })
+    app.gg.draw_text(app.screen_width + padding, padding, 'Part 1', app.font_cfg)
+    app.gg.draw_text(app.screen_width + padding, padding + size, '(${app.cur_col}, ${app.cur_row})', app.font_cfg)
+    app.gg.draw_text(app.screen_width + padding, padding + (2 * size), 'State: ${app.state}', app.font_cfg)
+    app.gg.draw_text(app.screen_width + padding, padding + (3 * size), 'Visible: ${app.cur_count}', app.font_cfg)
     app.gg.end()
 }
