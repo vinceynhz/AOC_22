@@ -42,3 +42,18 @@ Thus that this kind of problems are great to attack the downfalls from this seem
 Finally, the same conversation introduced the topic of AIs for software development. The initial thought is of course one of wariness: "an AI could replace us".
 
 Oooohh! But here's some questions, does the use of those tools give us any understanding of the problem? Can we build upon it on creative ways to keep furthering what engineering/software can be? [Are we heading to Geordie LaForge from Star Trek TNG, or to Wall-E](https://www.youtube.com/watch?v=48mf2QUtUmg)?
+
+---
+
+For the graphic part. I'm using V's gg module to handle that part.
+
+The data is a matrix, so the first part is to calculate the scale for each position of the matrix from a predefined max width, and the size of the input data.
+
+On this problem in particular the value of each cell in the matrix is a number `0-9` which then I use to calculate the light value of an HSL color that then is converted to RGB for final render in the screen.
+
+The HSL -> RGB conversion I took shamelessly from the [w3schools on HSL Colors page](https://www.w3schools.com/colors/colors_hsl.asp) porting the code from JS to V.
+
+I created a reduced version of my input data for the purposes of sharing the visualization code and the final video of its running. I have part one so far and I will update part two as soon as I have it. 
+
+
+
