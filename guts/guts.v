@@ -1,18 +1,72 @@
 // [G]raphic [UT]ilitie[S]
 module guts
 
-import gx
 import math
+import gg
+import gx
 
 pub const (
     win_width  = 900
     padding = 10
+    grid_gray = gx.Color{
+        r: 50, 
+        g: 50, 
+        b: 50,
+    }
+    axis_gray = gx.Color{
+        r: 80, 
+        g: 80, 
+        b: 80,
+    }
 )
 
 pub enum State {
     waiting
     running
     done
+}
+
+pub enum Font_Size {
+    small
+    medium
+    regular
+}
+
+pub struct App {
+mut:
+    gg            &gg.Context = unsafe { nil }
+    state         State = .waiting
+    padding       int = padding
+    em_size       int
+    scale         int
+    height        int
+    width         int
+    screen_height int
+    screen_width  int
+}
+
+pub fn (app &App) padded(val int) int {
+    return val + app.padding
+}
+
+pub fn (app &App) scale(val int) int {
+    return app.padded(val * app.scale)
+}
+
+pub fn (app &App) font(size Font_Size) gx.TextCfg {
+    return app.color_font(size, gx.white)
+}
+
+pub fn (app &App) color_font(size Font_Size, color gx.Color) gx.TextCfg {
+    return gx.TextCfg{ color: color, size: app.font_size(size) }
+}
+
+pub fn (app &App) font_size(size Font_Size) int {
+    return match size {
+        .small { app.em_size / 60 }
+        .medium { app.em_size / 45 }
+        .regular { app.em_size / 30 }
+    }
 }
 
 pub fn hsl_to_rgb(_hue int, sat f32, light f32) gx.Color {
@@ -56,10 +110,14 @@ pub fn padded(val int) int {
 }
 
 pub fn screen_metrics(height int, width int) (int, int, int, int) {
-	mut scale := math.max(height, width)
+    return padded_screen_metrics(height, width, padding)
+}
+
+pub fn padded_screen_metrics(height int, width int, pad int) (int, int, int, int) {
+    mut scale := math.max(height, width)
     scale = (win_width - padding) / scale
-    screen_width := scale * width + padding * 2
-    screen_height := scale * height + padding * 2
+    screen_width := scale * width + pad * 2
+    screen_height := scale * height + pad * 2
     em_size := math.min(screen_height, screen_width)
     return scale, screen_height, screen_width, em_size
 }

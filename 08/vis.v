@@ -11,17 +11,9 @@ fn generate_swatch(val int) gx.Color {
     return guts.hsl_to_rgb(109, 1, l)
 }
 
-struct App {
+struct ModApp {
+    guts.App
 mut:
-    gg            &gg.Context = unsafe { nil }
-    state         guts.State = .waiting
-    font_cfg      gx.TextCfg
-    scale         int
-    height        int
-    width         int
-    screen_height int
-    screen_width  int
-    font_size     int
     data          []string
     visible       [][]bool
     max_score     int
@@ -32,11 +24,11 @@ mut:
     cur_col       int
 }
 
-fn (app &App) scale(val int) int {
+fn (app &ModApp) scale(val int) int {
     return guts.padded(val * app.scale)
 }
 
-fn (app &App) draw() {
+fn (app &ModApp) draw() {
     for i in 0 .. app.height {
         for j in 0 .. app.width {
             val := app.data[i][j] - 0x30
@@ -51,7 +43,7 @@ fn (app &App) draw() {
     app.gg.draw_rect_empty(app.scale(app.max_score_col) - 1, app.scale(app.max_score_row) - 1, app.scale + 2, app.scale + 2, gx.orange)
 }
 
-fn (mut app App) update() {
+fn (mut app ModApp) update() {
     if app.state != .running {
         return
     }
@@ -80,14 +72,14 @@ fn (mut app App) update() {
     }
 }
 
-fn (mut app App) reset() {
+fn (mut app ModApp) reset() {
     app.cur_col = 1
     app.cur_row = 1
     app.cur_count = app.height * 2 + (app.width - 2) * 2
     app.visible = [][]bool{len:app.height, init:[]bool{len:app.width, init:true}}
 }
 
-fn (mut app App) on_key_handler(key gg.KeyCode) {
+fn (mut app ModApp) on_key_handler(key gg.KeyCode) {
     if key == .enter {
         // println("Enter: ${app.state}")
         if app.state == .done {
@@ -111,15 +103,14 @@ fn main() {
 
     scale, screen_height, screen_width, em_size := guts.screen_metrics(height, width)
 
-    mut app := &App{
+    mut app := &ModApp{
         gg: 0
         scale: scale
         height: height
         width: width
         screen_height: screen_height
         screen_width: screen_width
-        font_size: em_size/30
-        font_cfg: gx.TextCfg{ color: gx.white, size: em_size/30 }
+        em_size: em_size
         data: lines
         visible: [][]bool{len: height, init:[]bool{len:width, init:true}}
     }
@@ -136,19 +127,19 @@ fn main() {
     app.gg.run()
 }
 
-fn on_event(e &gg.Event, mut app &App) {
+fn on_event(e &gg.Event, mut app &ModApp) {
     if e.typ == .key_down {
         app.on_key_handler(e.key_code)
     }
 }
 
-fn frame(mut app &App) {
+fn frame(mut app &ModApp) {
     app.gg.begin()
     app.update()
     app.draw()
-    app.gg.draw_text(guts.padded(app.screen_width), guts.padded(app.font_size * 0), 'Current: (${app.cur_col}, ${app.cur_row})', app.font_cfg)
-    app.gg.draw_text(guts.padded(app.screen_width), guts.padded(app.font_size * 1), 'State: ${app.state}', app.font_cfg)
-    app.gg.draw_text(guts.padded(app.screen_width), guts.padded(app.font_size * 2), 'Visible: ${app.cur_count}', app.font_cfg)
-    app.gg.draw_text(guts.padded(app.screen_width), guts.padded(app.font_size * 3), 'Max Score: ${app.max_score} @ (${app.max_score_col}, ${app.max_score_row})', app.font_cfg)
+    app.gg.draw_text(guts.padded(app.screen_width), guts.padded(app.font_size(.regular) * 0), 'Current: (${app.cur_col}, ${app.cur_row})', app.font(.regular))
+    app.gg.draw_text(guts.padded(app.screen_width), guts.padded(app.font_size(.regular) * 1), 'State: ${app.state}', app.font(.regular))
+    app.gg.draw_text(guts.padded(app.screen_width), guts.padded(app.font_size(.regular) * 2), 'Visible: ${app.cur_count}', app.font(.regular))
+    app.gg.draw_text(guts.padded(app.screen_width), guts.padded(app.font_size(.regular) * 3), 'Max Score: ${app.max_score} @ (${app.max_score_col}, ${app.max_score_row})', app.font(.regular))
     app.gg.end()
 }
